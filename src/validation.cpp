@@ -535,24 +535,21 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
         CTxDestination developerWalletDest = CBitcoinAddress(developerWallet).Get(); 
         CScript developerCScript = GetScriptForDestination(developerWalletDest);
         
-        //New rules apply after block 17000
-        if((int)chainActive.Height() >= 17000)
+
+        //Coinbase needs two outputs
+        if (tx.vout.size() < 2){
+            return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-sizeinvalid");
+        
+        }
+        //second output must have developer address
+        if (tx.vout[1].scriptPubKey != developerCScript)
         {
-            //Coinbase needs two outputs
-            if (tx.vout.size() < 2){
-                return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-sizeinvalid");
-            
-            }
-            //second output must have developer address
-            if (tx.vout[1].scriptPubKey != developerCScript)
-            {
-                return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-fundoutputinvalid");
-            }
-            //second output must be at least 25% of first output (80 - 20)
-            if (tx.vout[1].nValue < (tx.vout[0].nValue / (4 + 1e-5)))
-            {
-                return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-fundoutputtoosmall");                
-            }
+            return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-fundoutputinvalid");
+        }
+        //second output must be at least 10% of first output (90 - 10)
+        if (tx.vout[1].nValue < (tx.vout[0].nValue / (10 + 1e-5)))
+        {
+            return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-fundoutputtoosmall");                
         }
 
     }

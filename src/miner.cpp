@@ -208,8 +208,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
 
     //coinbaseTx.vout[0].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
 
-    coinbaseTx.vout[0].nValue = 0.8 * (nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus()));
-    coinbaseTx.vout[1].nValue = 0.2 * (nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus()));
+    coinbaseTx.vout[0].nValue = 0.9 * (nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus()));
+    coinbaseTx.vout[1].nValue = 0.1 * (nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus()));
 
 
 
